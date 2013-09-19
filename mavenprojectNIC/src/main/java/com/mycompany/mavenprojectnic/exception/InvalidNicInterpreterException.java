@@ -8,6 +8,9 @@ package com.mycompany.mavenprojectnic.exception;
  *
  * @author User 123
  */
-public class InvalidNicInterpreterException {
+public class InvalidNicInterpreterException extends Exception{
     
+    public InvalidNicInterpreterException() {
+		super("Invalid NIC entered.");
+	}
 }

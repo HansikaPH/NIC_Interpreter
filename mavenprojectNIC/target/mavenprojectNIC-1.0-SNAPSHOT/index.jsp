@@ -5,7 +5,11 @@
              
             SriLankan Citizen's Nic Interpreter
         </h1>
-        <form action="result.jsp" method="get">
+         <h3>
+            Written by 
+            <%="H.P Hewamalage - 110220J"%>
+        </h3>
+        <form action="results.jsp" method="get">
                Nic Number : <input type="text" name="IDnumber">
               <input type="submit">
         </form>

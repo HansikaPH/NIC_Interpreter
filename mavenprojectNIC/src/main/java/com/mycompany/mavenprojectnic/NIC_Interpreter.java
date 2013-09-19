@@ -4,6 +4,10 @@
  */
 package com.mycompany.mavenprojectnic;
 import java.util.Calendar;
+import java.util.regex.Matcher;
+import com.mycompany.mavenprojectnic.NICprop;
+import com.mycompany.mavenprojectnic.exception.InvalidNicInterpreterException;
+
 //import java.util.Scanner;
 /**
  *
@@ -11,25 +15,31 @@ import java.util.Calendar;
  */
 public class NIC_Interpreter {
     private int year, month, day;
-    String gender;
-    String NIC;
-    int yearCode, monthCode;
-    boolean isVoter;
-    Calendar c;
+    private String gender;
+    private int yearCode, monthCode;
+    private boolean isVoter;
+    private Calendar c;
     
- /*   public static void main(){
-        Scanner input = new Scanner(System.in);
-        String y = input.nextLine();
-        NIC_Interpreter x = new NIC_Interpreter(y);
+    public NICprop createNICprop( String ID ) throws InvalidNicInterpreterException{
+        try{
+            return new NICprop(ID);
+        }
+        catch( Exception ex ){
+            throw new InvalidNicInterpreterException(); 
+        }
         
-    }*/
-    public NIC_Interpreter( String ID ){
-        NIC = ID;
-        yearCode = Integer.parseInt(NIC.substring(0,2));
-        monthCode = Integer.parseInt(NIC.substring(2,5));
-        findGender();
-        c = Calendar.getInstance();
-        c.set(c.DAY_OF_YEAR, monthCode);
+    }
+    
+    public void checkValidity( NICprop prop ) throws InvalidNicInterpreterException{
+        if( !validate( prop ) ) throw new InvalidNicInterpreterException();
+        
+        else{
+            yearCode = Integer.parseInt(prop.getNIC().substring(0,2));
+            monthCode = Integer.parseInt(prop.getNIC().substring(2,5));
+            findGender();
+            c = Calendar.getInstance();
+            c.set(c.DAY_OF_YEAR, monthCode);
+        } 
     }
     
     public int getMonth() {
@@ -48,7 +58,7 @@ public class NIC_Interpreter {
         return gender;
     }
 
-    public boolean isIsVoter() {
+    public boolean isVoter() {
         return isVoter;
     }
 
@@ -77,12 +87,7 @@ public class NIC_Interpreter {
     }
     
     public void calculateMonth (){
-        
-        
         setMonth(c.get(c.MONTH)+1);
-
-   //     System.out.println(year1 + "-" +month +"-" + mydate);
-
     }
 
     public void calculateDay(){
@@ -100,5 +105,16 @@ public class NIC_Interpreter {
     public void findVoter(){
         if( (2013 - getYear()) > 18 ) isVoter = true;
         else isVoter = false;
+    }
+    
+    public boolean validate( NICprop prop ){
+        if( prop.getNIC().length() == 10 && (prop.getNIC().charAt(9) == 'v' || prop.getNIC().charAt(9) == 'V') && (prop.getNIC().substring(0, 9)).matches("[0-9]+")){
+            return true;
+        }
+        else return false;
+        
+    }
+    public String output(){
+        return String.format("Nic[birthday=BirthDay[year=%d, month = %d, date = %d], gender = %s, isVoter = %b]",getYear(),getMonth(),getDay(),getGender(),isVoter());
     }
 }
